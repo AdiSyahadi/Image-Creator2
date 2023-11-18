@@ -33,8 +33,12 @@ if st.button("Proses"):
         st.stop()
 
     # Terjemahkan prompt ke bahasa Inggris
-    user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
-    st.write("Terjemahan: ", user_prompt_en)
+    try:
+        user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
+        st.write("Terjemahan: ", user_prompt_en)
+    except Exception as e:
+        st.error(f"Terjadi kesalahan saat menerjemahkan: {str(e)}")
+        st.stop()
 
     num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
 
