@@ -1,4 +1,3 @@
-import numpy as np
 import streamlit as st
 from diffusers import DiffusionPipeline, LCMScheduler
 from PIL import Image
@@ -21,10 +20,14 @@ pipe.safety_checker = disabled_safety_checker
 
 st.title("Streamlit Diffusion Demo")
 
-# Tambahkan button "Mulai Inferensi"
-if st.button("Mulai Inferensi"):
-    user_prompt_id = st.text_input("Masukkan prompt untuk inferensi (atau ketik 'exit' untuk keluar): ")
+# Input prompt
+user_prompt_id = st.text_input("Masukkan prompt untuk inferensi (atau ketik 'exit' untuk keluar): ")
 
+# Input jumlah langkah inferensi
+num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
+
+# Tombol untuk memulai inferensi
+if st.button("Proses Inferensi"):
     if user_prompt_id.lower() == 'exit':
         st.write("Inferensi dihentikan.")
     else:
@@ -34,8 +37,6 @@ if st.button("Mulai Inferensi"):
             st.error("Terjadi kesalahan saat menerjemahkan. Silakan coba lagi.")
             user_prompt_en = ""  # Memberikan nilai default jika terjemahan gagal
         st.write("Terjemahan: ", user_prompt_en)
-
-        num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
 
         start_time = time.time()
 
