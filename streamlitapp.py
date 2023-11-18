@@ -21,7 +21,7 @@ pipe.safety_checker = disabled_safety_checker
 st.title("Streamlit Diffusion Demo")
 
 while True:
-    user_prompt_id = st.text_input("Masukkan prompt untuk inferensi (atau ketik 'exit' untuk keluar): ")
+    user_prompt_id = st.text_input("Masukkan prompt untuk inferensi (atau ketik 'exit' untuk keluar): ", key="prompt_input")
 
     if user_prompt_id.lower() == 'exit':
         break
@@ -33,7 +33,7 @@ while True:
         st.error(f"Terjadi kesalahan saat menerjemahkan: {str(e)}")
         continue
 
-    num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
+    num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5, key="inference_steps")
 
     start_time = time.time()
 
@@ -58,6 +58,6 @@ while True:
 
     # Check if results is not None before attempting to display the image
     if results is not None and results.images is not None and len(results.images) > 0:
-        st.image(results.images[0].numpy(), caption='Inferensi Result', use_column_width=True)
+        st.image(results.images[0].numpy(), caption='Inferensi Result', use_column_width=True, key="inference_result")
     else:
         st.warning("Hasil inferensi tidak tersedia.")
