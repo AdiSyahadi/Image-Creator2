@@ -29,8 +29,8 @@ while True:
 
     try:
         user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
-    except exceptions.GoogleTranslateException as e:
-        st.error(f"Terjadi kesalahan saat menerjemahkan: {e}")
+    except Exception as e:
+        st.error("Terjadi kesalahan saat menerjemahkan. Silakan coba lagi.")
         user_prompt_en = ""  # Memberikan nilai default jika terjemahan gagal
     st.write("Terjemahan: ", user_prompt_en)
 
