@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 from diffusers import DiffusionPipeline, LCMScheduler
 from PIL import Image
@@ -20,28 +21,25 @@ pipe.safety_checker = disabled_safety_checker
 
 st.title("Streamlit Diffusion Demo")
 
-user_prompt_id = st.text_input("Masukkan prompt untuk inferensi (atau ketik 'exit' untuk keluar): ", key="prompt_input")
+while True:
+    user_prompt_id = st.text_input("Masukkan prompt untuk inferensi (atau ketik 'exit' untuk keluar): ")
 
-if user_prompt_id.lower() != 'exit':
-    try:
-        user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
-        st.write("Terjemahan: ", user_prompt_en)
-    except Exception as e:
-        st.error(f"Terjadi kesalahan saat menerjemahkan: {str(e)}")
+    if user_prompt_id.lower() == 'exit':
+        break
 
-    num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5, key="inference_steps")
+    user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
+    st.write("Terjemahan: ", user_prompt_en)
+
+    num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
 
     start_time = time.time()
 
-    try:
-        results = pipe(
-            prompt=user_prompt_en,
-            num_inference_steps=num_inference_steps,
-            guidance_scale=0.3,
-            nsfw=False
-        )
-    except Exception as e:
-        st.error(f"Terjadi kesalahan saat menjalankan inferensi: {str(e)}")
+    results = pipe(
+        prompt=user_prompt_en,
+        num_inference_steps=num_inference_steps,
+        guidance_scale=0.3,
+        nsfw=False
+    )
 
     end_time = time.time()
 
@@ -52,7 +50,9 @@ if user_prompt_id.lower() != 'exit':
     st.write(f"Latensi: {latency_minutes} menit {remaining_seconds:.2f} detik")
 
     # Check if results is not None before attempting to display the image
-    if 'results' in locals() and results is not None and results.images is not None and len(results.images) > 0:
-        st.image(results.images[0].numpy(), caption='Inferensi Result', use_column_width=True, key="inference_result")
+    if results is not None and results.images is not None and len(results.images) > 0:
+        # Convert Image to NumPy array
+        image_array = np.array(results.images[0])
+        st.image(image_array, caption='Inferensi Result', use_column_width=True, key="inference_result")
     else:
-        st.warning("Hasil inferensi tidak tersedia.")
+        st.write("Hasil inferensi tidak tersedia.")
