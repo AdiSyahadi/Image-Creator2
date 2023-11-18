@@ -3,7 +3,7 @@ import streamlit as st
 from diffusers import DiffusionPipeline, LCMScheduler
 from PIL import Image
 import time
-from googletrans import Translator
+from googletrans import Translator, exceptions
 
 translator = Translator()
 
@@ -27,7 +27,11 @@ while True:
     if user_prompt_id.lower() == 'exit':
         break
 
-    user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
+    try:
+        user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
+    except exceptions.GoogleTranslateException as e:
+        st.error(f"Terjadi kesalahan saat menerjemahkan: {e}")
+        user_prompt_en = ""  # Memberikan nilai default jika terjemahan gagal
     st.write("Terjemahan: ", user_prompt_en)
 
     num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
