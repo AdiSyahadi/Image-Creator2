@@ -26,19 +26,27 @@ while True:
     if user_prompt_id.lower() == 'exit':
         break
 
-    user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
-    st.write("Terjemahan: ", user_prompt_en)
+    try:
+        user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
+        st.write("Terjemahan: ", user_prompt_en)
+    except Exception as e:
+        st.error(f"Terjadi kesalahan saat menerjemahkan: {str(e)}")
+        continue
 
     num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
 
     start_time = time.time()
 
-    results = pipe(
-        prompt=user_prompt_en,
-        num_inference_steps=num_inference_steps,
-        guidance_scale=0.3,
-        nsfw=False
-    )
+    try:
+        results = pipe(
+            prompt=user_prompt_en,
+            num_inference_steps=num_inference_steps,
+            guidance_scale=0.3,
+            nsfw=False
+        )
+    except Exception as e:
+        st.error(f"Terjadi kesalahan saat menjalankan inferensi: {str(e)}")
+        continue
 
     end_time = time.time()
 
@@ -52,4 +60,4 @@ while True:
     if results is not None and results.images is not None and len(results.images) > 0:
         st.image(results.images[0].numpy(), caption='Inferensi Result', use_column_width=True)
     else:
-        st.write("Hasil inferensi tidak tersedia.")
+        st.warning("Hasil inferensi tidak tersedia.")
