@@ -2,3 +2,4 @@ streamlit
 diffusers
 Pillow
 googletrans
+torch
