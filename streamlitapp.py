@@ -52,7 +52,7 @@ if user_prompt_id.lower() != 'exit':
     st.write(f"Latensi: {latency_minutes} menit {remaining_seconds:.2f} detik")
 
     # Check if results is not None before attempting to display the image
-    if results is not None and results.images is not None and len(results.images) > 0:
+    if 'results' in locals() and results is not None and results.images is not None and len(results.images) > 0:
         st.image(results.images[0].numpy(), caption='Inferensi Result', use_column_width=True, key="inference_result")
     else:
         st.warning("Hasil inferensi tidak tersedia.")
