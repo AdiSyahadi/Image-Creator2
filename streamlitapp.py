@@ -21,42 +21,43 @@ pipe.safety_checker = disabled_safety_checker
 
 st.title("Streamlit Diffusion Demo")
 
-while True:
+# Tambahkan button "Mulai Inferensi"
+if st.button("Mulai Inferensi"):
     user_prompt_id = st.text_input("Masukkan prompt untuk inferensi (atau ketik 'exit' untuk keluar): ")
 
     if user_prompt_id.lower() == 'exit':
-        break
-
-    try:
-        user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
-    except Exception as e:
-        st.error("Terjadi kesalahan saat menerjemahkan. Silakan coba lagi.")
-        user_prompt_en = ""  # Memberikan nilai default jika terjemahan gagal
-    st.write("Terjemahan: ", user_prompt_en)
-
-    num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
-
-    start_time = time.time()
-
-    results = pipe(
-        prompt=user_prompt_en,
-        num_inference_steps=num_inference_steps,
-        guidance_scale=0.3,
-        nsfw=False
-    )
-
-    end_time = time.time()
-
-    latency_seconds = end_time - start_time
-    latency_minutes = int(latency_seconds // 60)
-    remaining_seconds = latency_seconds % 60
-
-    st.write(f"Latensi: {latency_minutes} menit {remaining_seconds:.2f} detik")
-
-    # Check if results is not None before attempting to display the image
-    if results is not None and results.images is not None and len(results.images) > 0:
-        # Convert Image to NumPy array
-        image_array = np.array(results.images[0])
-        st.image(image_array, caption='Inferensi Result', use_column_width=True, key="inference_result")
+        st.write("Inferensi dihentikan.")
     else:
-        st.write("Hasil inferensi tidak tersedia.")
+        try:
+            user_prompt_en = translator.translate(user_prompt_id, src='id', dest='en').text
+        except Exception as e:
+            st.error("Terjadi kesalahan saat menerjemahkan. Silakan coba lagi.")
+            user_prompt_en = ""  # Memberikan nilai default jika terjemahan gagal
+        st.write("Terjemahan: ", user_prompt_en)
+
+        num_inference_steps = st.slider("Masukkan jumlah langkah inferensi (num_inference_steps): ", 1, 10, 5)
+
+        start_time = time.time()
+
+        results = pipe(
+            prompt=user_prompt_en,
+            num_inference_steps=num_inference_steps,
+            guidance_scale=0.3,
+            nsfw=False
+        )
+
+        end_time = time.time()
+
+        latency_seconds = end_time - start_time
+        latency_minutes = int(latency_seconds // 60)
+        remaining_seconds = latency_seconds % 60
+
+        st.write(f"Latensi: {latency_minutes} menit {remaining_seconds:.2f} detik")
+
+        # Check if results is not None before attempting to display the image
+        if results is not None and results.images is not None and len(results.images) > 0:
+            # Convert Image to NumPy array
+            image_array = np.array(results.images[0])
+            st.image(image_array, caption='Inferensi Result', use_column_width=True)
+        else:
+            st.write("Hasil inferensi tidak tersedia.")
