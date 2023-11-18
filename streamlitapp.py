@@ -1,4 +1,5 @@
 import streamlit as st
+import numpy as np
 from diffusers import DiffusionPipeline, LCMScheduler
 from PIL import Image
 import time
