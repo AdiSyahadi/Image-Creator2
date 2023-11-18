@@ -3,7 +3,7 @@ import streamlit as st
 from diffusers import DiffusionPipeline, LCMScheduler
 from PIL import Image
 import time
-from googletrans import Translator, exceptions
+from googletrans import Translator
 
 translator = Translator()
 
