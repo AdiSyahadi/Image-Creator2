@@ -3,7 +3,7 @@ from PIL import Image
 import time
 
 pipe = DiffusionPipeline.from_pretrained("Lykon/dreamshaper-7")
-pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
+pipe.scheduler = LCMScheduler.from_config
 pipe.load_lora_weights("latent-consistency/lcm-lora-sdv1-5")  # ya, ini LoRA biasa
 
 while True:
