@@ -1,7 +1,7 @@
 streamlit
 diffusers
 Pillow
-googletrans
+googletrans==4.0.0-rc1
 torch
 torchvision
 transformers
