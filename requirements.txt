@@ -5,3 +5,4 @@ googletrans
 torch
 torchvision
 transformers
+accelerate
